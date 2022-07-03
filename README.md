@@ -2,11 +2,13 @@
 Collection of various Decision Tree Algorithms to analyze data with an unbalanced class distribution with *Python 3.8*. To conquer the problem a variety of Boosting Algorithms as well as Under and Over Sampling will be tested.
 
 ## Table of Contents
-- [Requirements](#requirements)
-- [Introduction and Dataset](#introduction-and-dataset)
-- [First Implementation](#first-implementations)
+- [Project UniBo](#project-unibo)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Introduction and Dataset](#introduction-and-dataset)
+  - [First Implementations](#first-implementations)
     - [Cross Validation](#cross-validation)
-- [Boosting Algorithms](#boosting-algorithms)
+  - [Boosting Algorithms](#boosting-algorithms)
 
 ## Requirements
 Clone the Git repository
@@ -46,12 +48,13 @@ Other classes with a lot of imbalance are *Stroke*, the previous illnesses and *
 
 ## First Implementations
 All implementations are done in `dtc_comp.ipynb`. This project uses a variety of Decision Tree Classifier and algorithms that depend on them. Most of the algorithms are provided by the python package [scikit-learn](https://scikit-learn.org/stable/index.html). Decision Trees are machine learning algorithms which cut the data based on the given classes. The given dataset is randomly splitted into training and test dataset in the ratio 3:2. The learning structure takes the form of a tree, where the class labels are leaves and the actual values are the branches.
-![](figures/decision_tree.png)
+<p align="center"> <img src="./figures/decision_tree.png"/>
+</p>
 The Decision Trees are build from the top to the bottom. At each further node the data will be split up that the child nodes are as pure as possible. The so called *loss functions* are a measure for the *impurity* of the dataset and thus has to be minimized by the algorithm. How many cuts in total are made by the algorithm can be set (*max_depth*) to prevent overtraining.
 
 To start off, the standard `DecisionTreeClassifier` (*DTC*) of **scikit-learn** is used. It provides two different criterions:
-- The *Entropy* $H$ criterion describes the impurity analogous to the entropy in thermodynamics as disorder. So if there are multiple classes in a node, there is entropy here. It can be definded as  $H = - \sum_{i=1}^{N} p_i \text(log)_2(p_i)$, where $p_i$ is the probability of a class in a node with $N$ classes.
-- The *Gini* $G$ criterion measures the frequency at which an element of the dataset will be mislabelled when it is randomly labeled. It is defined as $G = 1 - \sum_{i}^{N} p_i^2$.
+- The *Entropy* $H$ criterion describes the impurity analogous to the entropy in thermodynamics as disorder. So if there are multiple classes in a node, there is entropy here. It can be definded as  $H = - \sum_{i} p_i \text{log}_2(p_i)$, where $p_i$ is the probability of a class in a node with $N$ classes.
+- The *Gini* $G$ criterion measures the frequency at which an element of the dataset will be mislabelled when it is randomly labeled. It is defined as $G = 1 - \sum_{i} p_i^2$.
 
 To evaluate the algorithms scoring parameters will be used. In this project mostly the *accuracy* (ACC) and *recall* (REC) score will be used. They are defined by the parts of *true positive (TP)*, *false positives (FP)*, *true negative (TN)* and *false negative (FN)* results.The accuracy is definded as $$ \text{ACC} = \frac{TP + TN}{TP + FP + TN +FN} $$ whilethe recall is defined as $$ \text{REC} = \frac{TP}{TN + FP} $$. Furthermore, the *Receiver operating characteristic* (ROC) curve is another used algorithm. It describes the curve of the true positive rate ($TPR = \frac{TP}{TP + FN}$) plotted against the false positive rate ($FPR = \frac{FP}{FP + TN}$). It can be evaluated with the area under the curve (ROC AuC), which is around 0.5 for a random classifier and should therefore be higher than that for a real one.
 
