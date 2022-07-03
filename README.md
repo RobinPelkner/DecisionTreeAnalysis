@@ -46,9 +46,7 @@ Other classes with a lot of imbalance are *Stroke*, the previous illnesses and *
 
 ## First Implementations
 All implementations are done in `dtc_comp.ipynb`. This project uses a variety of Decision Tree Classifier and algorithms that depend on them. Most of the algorithms are provided by the python package [scikit-learn](https://scikit-learn.org/stable/index.html). Decision Trees are machine learning algorithms which cut the data based on the given classes. The given dataset is randomly splitted into training and test dataset in the ratio 3:2. The learning structure takes the form of a tree, where the class labels are leaves and the actual values are the branches.
-<p align="center">
-    <img src="figures/decision_tree.png" width="550"\>
-</p>
+![](figures/decision_tree.png)
 The Decision Trees are build from the top to the bottom. At each further node the data will be split up that the child nodes are as pure as possible. The so called *loss functions* are a measure for the *impurity* of the dataset and thus has to be minimized by the algorithm. How many cuts in total are made by the algorithm can be set (*max_depth*) to prevent overtraining.
 
 To start off, the standard `DecisionTreeClassifier` (*DTC*) of **scikit-learn** is used. It provides two different criterions:
