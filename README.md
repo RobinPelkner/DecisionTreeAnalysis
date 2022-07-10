@@ -12,6 +12,7 @@ Collection of various Decision Tree Algorithms to analyze data with an unbalance
   - [Over Sampling](#over-sampling)
   - [Under Sampling](#under-sampling)
   - [Results](#results)
+  - [Conclusion](#conclusion)
 
 ## Requirements
 Clone the Git repository
@@ -105,10 +106,50 @@ For all included algorithms crossvalidation is performed for fairly optimal numb
 |Recall     |0.0768 ± 0.0144|0.0868 ± 0.0148|0.1028 ± 0.0062|0.0941 ± 0.0040|0.0775 ± 0.0067| 0.0865 ± 0.0058|0.0998 ± 0.0029|
 
 ## Over Sampling
-One method of improving faulty results due to imbalanced classes is the so called Over Sampling. It includes copies of the minority class to the dataset. This is a method usually used when there is not a lot of data available since it makes the training more resource costly. Inclusion of more underrepresented data in combination with boosting algorithms should improve the recall score by a lot. The package [Imbalanced-learn](https://imbalanced-learn.org/stable/index.html) includes many Over Sampling algorithms, three of them will be used in this analysis: The *RandomOverSampler* copies samples at random from the underrepresented class. Apart from that there are two other popular over sampling techniques: *Synthetic Minority Oversampling Technique* (SMOTE) and the *Adaptive Synthetic Sampling Approach* (ADASYN). SMOTE creates synthetic by applying a nearest neigbour algorithm to the original data thus not copying already existing data, but creating similar samples. ADASYN follows a similar approach where synthetic data is generated which is harder to learn for the models thus improving the learning procedure as well; details on this can be found [here](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4633969). 
+One method of improving faulty results due to imbalanced classes is the so called Over Sampling. It includes copies of the minority class to the dataset. This is a method usually used when there is not a lot of data available since it makes the training more resource costly. Inclusion of more underrepresented data in combination with boosting algorithms should improve the recall score by a lot. The package [Imbalanced-learn](https://imbalanced-learn.org/stable/index.html) includes many Over Sampling algorithms, three of them will be used in this analysis: The *RandomOverSampler* copies samples at random from the underrepresented class. Apart from that there are two other popular over sampling techniques: *Synthetic Minority Oversampling Technique* (SMOTE) and the *Adaptive Synthetic Sampling Approach* (ADASYN). SMOTE creates synthetic by applying a nearest neigbour algorithm to the original data thus not copying already existing data, but creating similar samples. ADASYN follows a similar approach where synthetic data is generated which is harder to learn for the models thus improving the learning procedure as well; details on this can be found [here](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4633969). The scoring results can be found in the plots below.
 
+<p align="center"> <img src="figures/Sampling/AccuracyOver.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/Sampling/RecallOver.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/Sampling/ROCAuCOver.png" width="500"/>
+</p>
+
+It becomes apparent that the accuracy has been lowered in general in comparison to the models without sampling especially when using the *RandomOverSampler*. The *RandomOverSampler* provides on the other hand the best recall values of almost 0.8 for all models, while the not-boosted algorithms seem to work best with the SMOTE and ADASYN in this regard. The ROC AuC values are very similar to the values found before.
+
+All in all it can be said, that *Over Sampling* improved the quality of the recall value significantly at the slight cost of decreased accuracy.  
 
 ## Under Sampling
-Another often used method to improve datasets with imbalanced classes is Under Sampling. Under Sampling is basically the opposite of Over Sampling. Instead of generating more data for the minority class, the majority class gets reduced. This project takes a look at three Under Sampling procedures of the [Imbalanced-learn](https://imbalanced-learn.org/stable/index.html) package. There is the *RandomUnderSampler* which removes samples randomly, the *CondensedNearestNeighbour*, which removes samples based on a kNN algorithm (similar to SMOTE), and *InstanceHardnessThreshold*, which removes samples based on their probability of being classified wrong.
+Another often used method to improve datasets with imbalanced classes is Under Sampling. Under Sampling is basically the opposite of Over Sampling. Instead of generating more data for the minority class, the majority class gets reduced. This project takes a look at three Under Sampling procedures of the [Imbalanced-learn](https://imbalanced-learn.org/stable/index.html) package. There is the *RandomUnderSampler* which removes samples randomly, the *NearMiss* (NM), which adds heuristic selection rules based on a kNN algorithm, and *InstanceHardnessThreshold* (IHT), which removes samples based on their probability of being classified wrong. The results of the scoring tests are shown below.
+
+<p align="center"> <img src="figures/Sampling/AccuracyUnder.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/Sampling/RecallUnder.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/Sampling/ROCAuCUnder.png" width="500"/>
+</p>
+
+In comparison to the Over Sampling models, the accuracy decreased again. For *RandomUnderSampler* and IHT the accuracy is now around 0.7, while NM has a significantly stronger drecrease. The recall value is now for all samplers and all boosting algorithms above 0.8, where NM achieves the highest score. The ROC AuC score is similar to before with the exception of the NM algorithm.
+
+Under Sampling algorithms seem to be working as well. With the trade-off of less accuracy even more recall could be gained in comparison to Over Sampling. The only exception seems to be the Near Miss algorithm which looses a lot of accuracy over the others. 
 
 ## Results
+To gain the final result, the IHT algorithm with *HistGradientBoost* since its recall value is the best while also having resonable accuracy. For comparative reasons, other IHT models with AdaBoost and CatBoost will be used. 
+
+To evaluate the importance, *permutation importance* will be used. It is designed to evaluate the decrease of a scoring metric, when features are shuffeled randomly. The scoring metric used here is *ROC AuC*. 
+
+The feature importances of all models are shown below in the form of box plots.
+
+<p align="center"> <img src="figures/importance/ada.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/importance/cat.png" width="500"/>
+</p>
+<p align="center"> <img src="figures/importance/hgb.png" width="500"/>
+</p>
+
+All models bring similar results, although the order of features are not completely the same. All models deem the age of the patient to be the most important feature, followed by general health, the sex wether the patient had a stroke before and wether they have diabetes. Other features make almost no impact at all like mental health, BMI and physical activity. 
+
+This result is not unexpected since it is known that the probability of heart diseases increases with age, certain sexes more subsceptible to certain illnesses and other health issues not necessarily influence the heart. Other features, like General Health, are self evaluated and thus not completely quantifiable measures. This *human factor* can have enourmus effects on the final result.
+
+## Conclusion 
+In this project it was shown that imbalanced class distributions have significant impact on the viability of decision tree and boosted decision tree algortihms. Under given circumstances (like here) the algorithms can behave completely unreliable. Over and Under Sampling were introduced as possible solutions. They increased the recall values by a huge amount at a slight cost of accuracy. With the help of an under sampling algorithms and boosted decision trees the feature importance was analysed.
