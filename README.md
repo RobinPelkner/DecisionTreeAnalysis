@@ -1,4 +1,4 @@
-# Project UniBo
+# Analysis with Decision Tree Algorithms
 Collection of various Decision Tree Algorithms to analyse data with an imbalanced class distribution with *Python 3.8*. To conquer the problem a variety of Boosting Algorithms as well as Under and Over Sampling will be tested and used.
 
 ## Table of Contents
@@ -21,7 +21,7 @@ Clone the Git repository
 
 Load the required dependecies via 
 
-    $ cd ProjectUniBo/ 
+    $ cd DecisionTreeAnalysis/ 
     $ conda env create -f environment.yml 
     $ conda activate python3-env 
 
